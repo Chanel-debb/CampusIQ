@@ -9,4 +9,6 @@ urlpatterns = [
     path("api/", include("core.urls")),
     path("api/auth/", include("accounts.urls")),
     path("api/chat/", include("chat.urls")),
+    path("api/", include("careers.urls")),
+    path("api/", include("universities.urls")),
 ]

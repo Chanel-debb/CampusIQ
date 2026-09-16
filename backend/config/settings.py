@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Third-party
     "rest_framework",
+    "django_filters",
     "corsheaders",
     "channels",
     "pgvector.django",
@@ -45,6 +46,8 @@ INSTALLED_APPS = [
     "accounts",
     "core",
     "chat",
+    "careers",
+    "universities",
 ]
 
 AUTH_USER_MODEL = "accounts.User"

@@ -40,6 +40,16 @@ Phase 0 complete:
 
 Note: the chat data model is `Conversation` + `Message` (not the single `ChatSession` with a `messages` JSONB blob described under DB Models below) — relational messages made more sense alongside the WebSocket consumer. Worth reconciling that section if `ChatSession` is meant to be the eventual shape.
 
-## Phase 1 Next
-Build Career, CareerCategory, University, Program models with migrations.
-Add list/detail API endpoints with DRF serializers and viewsets.
+Phase 1 complete:
+- `careers` app: `CareerCategory` (name, slug) and `Career` (title, slug, description, salary_min/max, `job_outlook` enum, required_education, skills JSONB, `embedding vector(1536)` + HNSW index, FK to `CareerCategory`). Slugs auto-populate from name/title on save.
+- `universities` app: `University` (name, slug, province enum, city, website, logo_url, avg_rating, total_reviews, ranking_national) and `Program` (FK to `University`, name, slug unique-per-university, `degree_type` enum, duration_years, tuition_domestic/intl, avg_gpa_required, description, M2M to `Career`).
+- Read-only DRF endpoints: `GET /api/careers/` + `/api/careers/<slug>/`, `GET /api/universities/` + `/api/universities/<slug>/` (list/detail use separate serializers; detail nests category/programs). Public (`AllowAny`), since this is catalog data.
+- University filtering via django-filter: `?province=`, `?program=<program-slug>`, `?min_rating=`.
+- All four models registered in Django admin (`Program` inlined under `University`, autocomplete + `careers` M2M widget on `ProgramAdmin`).
+
+Note: `University.Province` is duplicated as a nested enum on the model rather than shared with `accounts.User.province`, matching the existing per-model TextChoices convention in this codebase (not centralized) — same duplication tradeoff as before, now in two places instead of one.
+
+## Phase 2 Next
+Build Review (user/university/program FK, ratings 1-5, body, moderation status) and MatchResult
+(user FK, quiz_answers JSONB, recommended careers + programs) models. Wire up the Program Matcher
+quiz flow and Student Reviews endpoints.
