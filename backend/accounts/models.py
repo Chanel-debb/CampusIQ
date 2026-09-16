@@ -3,6 +3,8 @@ import uuid
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+from core.choices import Province
+
 from .managers import UserManager
 
 
@@ -12,21 +14,6 @@ class User(AbstractUser):
         PARENT = "parent", "Parent"
         COUNSELOR = "counselor", "Counselor"
         ADMIN = "admin", "Admin"
-
-    class Province(models.TextChoices):
-        AB = "AB", "Alberta"
-        BC = "BC", "British Columbia"
-        MB = "MB", "Manitoba"
-        NB = "NB", "New Brunswick"
-        NL = "NL", "Newfoundland and Labrador"
-        NS = "NS", "Nova Scotia"
-        NT = "NT", "Northwest Territories"
-        NU = "NU", "Nunavut"
-        ON = "ON", "Ontario"
-        PE = "PE", "Prince Edward Island"
-        QC = "QC", "Quebec"
-        SK = "SK", "Saskatchewan"
-        YT = "YT", "Yukon"
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     username = None

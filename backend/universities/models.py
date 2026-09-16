@@ -3,23 +3,10 @@ import uuid
 from django.db import models
 from django.utils.text import slugify
 
+from core.choices import Province
+
 
 class University(models.Model):
-    class Province(models.TextChoices):
-        AB = "AB", "Alberta"
-        BC = "BC", "British Columbia"
-        MB = "MB", "Manitoba"
-        NB = "NB", "New Brunswick"
-        NL = "NL", "Newfoundland and Labrador"
-        NS = "NS", "Nova Scotia"
-        NT = "NT", "Northwest Territories"
-        NU = "NU", "Nunavut"
-        ON = "ON", "Ontario"
-        PE = "PE", "Prince Edward Island"
-        QC = "QC", "Quebec"
-        SK = "SK", "Saskatchewan"
-        YT = "YT", "Yukon"
-
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True, blank=True)

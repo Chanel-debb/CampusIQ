@@ -47,7 +47,7 @@ Phase 1 complete:
 - University filtering via django-filter: `?province=`, `?program=<program-slug>`, `?min_rating=`.
 - All four models registered in Django admin (`Program` inlined under `University`, autocomplete + `careers` M2M widget on `ProgramAdmin`).
 
-Note: `University.Province` is duplicated as a nested enum on the model rather than shared with `accounts.User.province`, matching the existing per-model TextChoices convention in this codebase (not centralized) — same duplication tradeoff as before, now in two places instead of one.
+`Province` choices are centralized in `core/choices.py` and imported by both `accounts.User.province` and `universities.University.province` — no more duplicated enum.
 
 ## Phase 2 Next
 Build Review (user/university/program FK, ratings 1-5, body, moderation status) and MatchResult
