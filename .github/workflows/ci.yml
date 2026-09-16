@@ -39,6 +39,7 @@ jobs:
       REDIS_URL: redis://localhost:6379/0
       DJANGO_SECRET_KEY: ci-test-secret-key
       DJANGO_DEBUG: "False"
+      DJANGO_SETTINGS_MODULE: config.settings
     steps:
       - uses: actions/checkout@v4
 
