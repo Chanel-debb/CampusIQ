@@ -39,3 +39,6 @@ extend-exclude = ["*/migrations/*"]
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]
 
+[tool.ruff.lint.per-file-ignores]
+"matcher/questions.py" = ["E501"]
+

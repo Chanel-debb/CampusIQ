@@ -12,4 +12,5 @@ urlpatterns = [
     path("api/", include("careers.urls")),
     path("api/", include("universities.urls")),
     path("api/", include("reviews.urls")),
+    path("api/", include("matcher.urls")),
 ]

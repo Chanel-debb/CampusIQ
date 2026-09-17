@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "careers",
     "universities",
     "reviews",
+    "matcher",
 ]
 
 AUTH_USER_MODEL = "accounts.User"

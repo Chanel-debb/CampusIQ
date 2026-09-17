@@ -57,7 +57,18 @@ Phase 2 (Reviews) complete:
 
 Note: couldn't run a live `migrate` against a real Postgres+pgvector instance in this environment (same Docker-daemon-unavailable limitation as Phase 0/1) — verified instead via `manage.py check`, `makemigrations --check` (no drift), a direct inspection of the generated migration's dependency graph, and confirming the signal receivers are actually connected for the `Review` model at runtime.
 
-## Phase 3 Next
-Build MatchResult (user FK, quiz_answers JSONB, recommended careers + programs) and wire up the
-Program Matcher quiz flow.
+Phase 3 (Program Matcher) complete:
+- `matcher` app: `MatchResult` (UUID PK, nullable FK `user`, `session_key` CharField for anonymous support, `quiz_answers` JSONField, M2M to `Career` (`recommended_careers`), M2M to `Program` (`recommended_programs`), `created_at`).
+- `matcher/questions.py`: 10 static quiz questions across interests/strengths/work_style/goals, each option carrying `tags` (e.g. "analytical", "creativity", "leadership") used for scoring.
+- `matcher/engine.py`: `run_matcher(quiz_answers)` — deterministic, no pgvector yet (that's Phase 5). Tallies tag frequency from the user's selected options, scores each `Career` by overlap with its `skills` JSONB plus a small `job_outlook` bonus (bright=3/growing=2/stable=1/declining=0), sorts by `(-score, title)` for a stable tie-break, returns the top 5 plus their linked `Program`s (deduped, ranked-career order preserved).
+- `GET /api/matcher/questions/`, `POST /api/matcher/run/` (works both authenticated and anonymous — anonymous requests get a server-generated `session_key` back if none was supplied), `GET /api/matcher/results/<session_key>/` (latest result for that key).
+
+Note: the API response's `recommended_careers`/`recommended_programs` are *not* read from the saved M2M relations — `Career`'s default ordering is alphabetical by title, which would silently discard match-score rank. Instead the view always computes (POST) or recomputes (GET, from the stored `quiz_answers` — deterministic, so it reproduces the same ranking) the ordered lists via `engine.run_matcher` and passes them through serializer context. The M2M fields are still persisted per spec, for admin/reporting use.
+
+Engine tag/skill vocabulary (e.g. "analytical", "hands-on", "service") is designed to plausibly overlap with `Career.skills` but no `Career` rows are seeded yet, so matching hasn't been exercised against real data — worth a smoke test once the catalog has seed data.
+
+## Phase 4 Next
+Seed representative Career/University/Program data so the matcher and catalog endpoints have
+something real to return. Then decide the next MVP feature to build out (AI Chat Assistant
+with pgvector-based RAG is Phase 5 per the original roadmap).
 
