@@ -15,11 +15,13 @@ export function ReviewCard({ review }: { review: Review }) {
     <Card>
       <CardBody>
         <div className="flex items-center justify-between">
-          <p className="font-medium text-slate-900">{review.user.full_name || "Anonymous"}</p>
+          <p className="font-medium text-slate-900 dark:text-white">
+            {review.user.full_name || "Anonymous"}
+          </p>
           <Stars value={review.overall_rating} />
         </div>
-        <p className="mt-2 text-sm text-slate-700">{review.body}</p>
-        <div className="mt-3 flex gap-4 text-xs text-slate-500">
+        <p className="mt-2 text-sm text-slate-700 dark:text-slate-300">{review.body}</p>
+        <div className="mt-3 flex gap-4 text-xs text-slate-500 dark:text-slate-300">
           <span>Teaching: {review.teaching_rating}/5</span>
           <span>Career support: {review.career_support_rating}/5</span>
         </div>

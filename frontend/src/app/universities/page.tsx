@@ -28,8 +28,8 @@ export default function UniversitiesPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      <h1 className="text-3xl font-bold text-slate-900">University Finder</h1>
-      <p className="mt-1 text-slate-600">
+      <h1 className="text-3xl font-bold text-slate-900 dark:text-white">University Finder</h1>
+      <p className="mt-1 text-slate-600 dark:text-slate-300">
         Search universities by province and rating to find the right fit.
       </p>
 
@@ -72,7 +72,7 @@ export default function UniversitiesPage() {
       )}
 
       {!isLoading && !isError && data?.length === 0 && (
-        <p className="mt-8 text-slate-500">No universities match your filters.</p>
+        <p className="mt-8 text-slate-500 dark:text-slate-300">No universities match your filters.</p>
       )}
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

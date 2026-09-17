@@ -31,10 +31,10 @@ export default function HomePage() {
   return (
     <div>
       <section className="mx-auto max-w-6xl px-4 py-20 text-center sm:px-6">
-        <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
+        <h1 className="text-4xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-5xl">
           Find the career and university that&apos;s right for you
         </h1>
-        <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
+        <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600 dark:text-slate-300">
           CampusIQ helps high school students explore careers, compare universities and
           programs, and get personalized recommendations — powered by AI.
         </p>
@@ -55,8 +55,12 @@ export default function HomePage() {
           {FEATURES.map((feature) => (
             <Card key={feature.href}>
               <CardBody className="flex h-full flex-col">
-                <h2 className="text-lg font-semibold text-slate-900">{feature.title}</h2>
-                <p className="mt-2 flex-1 text-sm text-slate-600">{feature.description}</p>
+                <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+                  {feature.title}
+                </h2>
+                <p className="mt-2 flex-1 text-sm text-slate-600 dark:text-slate-300">
+                  {feature.description}
+                </p>
                 <Link href={feature.href} className="mt-4">
                   <Button variant="outline" size="sm" className="w-full">
                     {feature.cta}

@@ -124,8 +124,8 @@ export default function ChatPage() {
   return (
     <div className="mx-auto flex h-[calc(100vh-8rem)] max-w-3xl flex-col px-4 py-6 sm:px-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">AI Chat Assistant</h1>
-        <p className="text-sm text-slate-600">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-white">AI Chat Assistant</h1>
+        <p className="text-sm text-slate-600 dark:text-slate-300">
           Ask about careers, universities, or programs — grounded in CampusIQ&apos;s catalog.
         </p>
       </div>
@@ -137,7 +137,7 @@ export default function ChatPage() {
               key={prompt}
               onClick={() => sendMessage(prompt)}
               disabled={connectionState !== "open"}
-              className="rounded-full border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-100 disabled:opacity-50"
+              className="rounded-full border border-slate-300 px-3 py-1.5 text-xs font-medium text-slate-600 hover:bg-slate-100 disabled:opacity-50 dark:text-slate-300"
             >
               {prompt}
             </button>
@@ -152,7 +152,7 @@ export default function ChatPage() {
       />
 
       {connectionState === "connecting" && (
-        <div className="flex items-center gap-2 text-xs text-slate-400">
+        <div className="flex items-center gap-2 text-xs text-slate-400 dark:text-slate-300">
           <Spinner size={14} /> Connecting...
         </div>
       )}

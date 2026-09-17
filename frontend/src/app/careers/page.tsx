@@ -41,8 +41,8 @@ export default function CareersPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      <h1 className="text-3xl font-bold text-slate-900">Career Explorer</h1>
-      <p className="mt-1 text-slate-600">
+      <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Career Explorer</h1>
+      <p className="mt-1 text-slate-600 dark:text-slate-300">
         Browse careers with real salary ranges, job outlook, and required skills.
       </p>
 
@@ -78,7 +78,7 @@ export default function CareersPage() {
       )}
 
       {!isLoading && !isError && filtered.length === 0 && (
-        <p className="mt-8 text-slate-500">No careers match your search.</p>
+        <p className="mt-8 text-slate-500 dark:text-slate-300">No careers match your search.</p>
       )}
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

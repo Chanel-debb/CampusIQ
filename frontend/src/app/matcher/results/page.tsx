@@ -32,7 +32,7 @@ export default function MatcherResultsPage() {
   if (sessionKey === null) {
     return (
       <div className="mx-auto max-w-2xl px-4 py-16 text-center sm:px-6">
-        <p className="text-slate-600">No quiz results found yet.</p>
+        <p className="text-slate-600 dark:text-slate-300">No quiz results found yet.</p>
         <Link href="/matcher" className="mt-4 inline-block">
           <Button>Take the quiz</Button>
         </Link>
@@ -58,13 +58,15 @@ export default function MatcherResultsPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      <h1 className="text-3xl font-bold text-slate-900">Your matches</h1>
-      <p className="mt-1 text-slate-600">
+      <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Your matches</h1>
+      <p className="mt-1 text-slate-600 dark:text-slate-300">
         Based on your answers, here are your top career and program matches.
       </p>
 
       <div className="mt-8">
-        <h2 className="text-xl font-semibold text-slate-900">Recommended careers</h2>
+        <h2 className="text-xl font-semibold text-slate-900 dark:text-white">
+          Recommended careers
+        </h2>
         {data.recommended_careers.length > 0 ? (
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {data.recommended_careers.map((career) => (
@@ -72,12 +74,14 @@ export default function MatcherResultsPage() {
             ))}
           </div>
         ) : (
-          <p className="mt-3 text-sm text-slate-500">No career matches found.</p>
+          <p className="mt-3 text-sm text-slate-500 dark:text-slate-300">No career matches found.</p>
         )}
       </div>
 
       <div className="mt-10">
-        <h2 className="text-xl font-semibold text-slate-900">Recommended programs</h2>
+        <h2 className="text-xl font-semibold text-slate-900 dark:text-white">
+          Recommended programs
+        </h2>
         {data.recommended_programs.length > 0 ? (
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {data.recommended_programs.map((program) => (
@@ -87,7 +91,7 @@ export default function MatcherResultsPage() {
                   <p className="mt-1 text-sm text-slate-500 dark:text-slate-300">
                     {program.university_name}
                   </p>
-                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-300">
                     {program.degree_type}
                   </p>
                 </CardBody>
@@ -95,7 +99,9 @@ export default function MatcherResultsPage() {
             ))}
           </div>
         ) : (
-          <p className="mt-3 text-sm text-slate-500">No program matches found.</p>
+          <p className="mt-3 text-sm text-slate-500 dark:text-slate-300">
+            No program matches found.
+          </p>
         )}
       </div>
 

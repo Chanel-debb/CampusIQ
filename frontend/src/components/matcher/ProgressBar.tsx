@@ -3,7 +3,7 @@ export function ProgressBar({ current, total }: { current: number; total: number
 
   return (
     <div>
-      <div className="flex items-center justify-between text-xs font-medium text-slate-500">
+      <div className="flex items-center justify-between text-xs font-medium text-slate-500 dark:text-slate-300">
         <span>
           Question {Math.min(current + 1, total)} of {total}
         </span>

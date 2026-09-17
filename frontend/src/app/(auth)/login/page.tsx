@@ -42,8 +42,8 @@ export default function LoginPage() {
 
   return (
     <div className="mx-auto flex max-w-md flex-col px-4 py-16 sm:px-6">
-      <h1 className="text-2xl font-bold text-slate-900">Log in</h1>
-      <p className="mt-1 text-sm text-slate-600">Welcome back to CampusIQ.</p>
+      <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Log in</h1>
+      <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">Welcome back to CampusIQ.</p>
 
       <Card className="mt-6">
         <CardBody>
@@ -74,7 +74,7 @@ export default function LoginPage() {
         </CardBody>
       </Card>
 
-      <p className="mt-4 text-center text-sm text-slate-600">
+      <p className="mt-4 text-center text-sm text-slate-600 dark:text-slate-300">
         Don&apos;t have an account?{" "}
         <Link href="/register" className="font-medium text-indigo-600 hover:text-indigo-700">
           Sign up

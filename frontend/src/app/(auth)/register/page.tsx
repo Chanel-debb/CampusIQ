@@ -53,8 +53,8 @@ export default function RegisterPage() {
 
   return (
     <div className="mx-auto flex max-w-md flex-col px-4 py-16 sm:px-6">
-      <h1 className="text-2xl font-bold text-slate-900">Create an account</h1>
-      <p className="mt-1 text-sm text-slate-600">
+      <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Create an account</h1>
+      <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
         Join CampusIQ to save reviews, quiz results, and chat history.
       </p>
 
@@ -86,7 +86,7 @@ export default function RegisterPage() {
             />
 
             <div className="flex flex-col gap-1">
-              <label htmlFor="role" className="text-sm font-medium text-slate-700">
+              <label htmlFor="role" className="text-sm font-medium text-slate-700 dark:text-slate-300">
                 I am a
               </label>
               <select
@@ -103,7 +103,7 @@ export default function RegisterPage() {
             </div>
 
             <div className="flex flex-col gap-1">
-              <label htmlFor="province" className="text-sm font-medium text-slate-700">
+              <label htmlFor="province" className="text-sm font-medium text-slate-700 dark:text-slate-300">
                 Province (optional)
               </label>
               <select
@@ -138,7 +138,7 @@ export default function RegisterPage() {
         </CardBody>
       </Card>
 
-      <p className="mt-4 text-center text-sm text-slate-600">
+      <p className="mt-4 text-center text-sm text-slate-600 dark:text-slate-300">
         Already have an account?{" "}
         <Link href="/login" className="font-medium text-indigo-600 hover:text-indigo-700">
           Log in

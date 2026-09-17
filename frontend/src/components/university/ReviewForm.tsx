@@ -85,7 +85,7 @@ export function ReviewForm({
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
       {programs.length > 0 && (
         <div className="flex flex-col gap-1">
-          <label htmlFor="program" className="text-sm font-medium text-slate-700">
+          <label htmlFor="program" className="text-sm font-medium text-slate-700 dark:text-slate-300">
             Program (optional)
           </label>
           <select
@@ -113,7 +113,7 @@ export function ReviewForm({
           ] as const
         ).map(([field, label]) => (
           <div key={field} className="flex flex-col gap-1">
-            <label htmlFor={field} className="text-sm font-medium text-slate-700">
+            <label htmlFor={field} className="text-sm font-medium text-slate-700 dark:text-slate-300">
               {label}
             </label>
             <select
@@ -132,7 +132,7 @@ export function ReviewForm({
       </div>
 
       <div className="flex flex-col gap-1">
-        <label htmlFor="body" className="text-sm font-medium text-slate-700">
+        <label htmlFor="body" className="text-sm font-medium text-slate-700 dark:text-slate-300">
           Your review
         </label>
         <textarea

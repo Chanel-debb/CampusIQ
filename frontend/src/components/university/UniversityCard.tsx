@@ -10,13 +10,15 @@ export function UniversityCard({ university }: { university: University }) {
       <Card className="h-full transition-shadow hover:shadow-md">
         <CardBody className="flex h-full flex-col gap-3">
           <div className="flex items-start justify-between gap-2">
-            <h3 className="text-base font-semibold text-slate-900">{university.name}</h3>
+            <h3 className="text-base font-semibold text-slate-900 dark:text-white">
+              {university.name}
+            </h3>
             <Badge tone="neutral">{university.province}</Badge>
           </div>
 
-          <p className="text-sm text-slate-500">{university.city}</p>
+          <p className="text-sm text-slate-500 dark:text-slate-300">{university.city}</p>
 
-          <div className="mt-auto flex items-center justify-between text-sm text-slate-600">
+          <div className="mt-auto flex items-center justify-between text-sm text-slate-600 dark:text-slate-300">
             <span>
               ⭐ {Number(university.avg_rating).toFixed(1)} ({university.total_reviews} reviews)
             </span>

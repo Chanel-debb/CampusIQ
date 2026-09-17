@@ -21,7 +21,7 @@ export function ChatWindow({ messages, streamingContent, isAssistantTyping }: Ch
   return (
     <div className="flex flex-1 flex-col gap-3 overflow-y-auto px-1 py-4">
       {messages.length === 0 && !isAssistantTyping && (
-        <p className="mt-8 text-center text-sm text-slate-400">
+        <p className="mt-8 text-center text-sm text-slate-400 dark:text-slate-300">
           Ask about careers, universities, or programs to get started.
         </p>
       )}

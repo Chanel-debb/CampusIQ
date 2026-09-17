@@ -64,8 +64,10 @@ export default function UniversityDetailPage() {
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">{university.name}</h1>
-          <p className="text-slate-600">
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white">
+            {university.name}
+          </h1>
+          <p className="text-slate-600 dark:text-slate-300">
             {university.city}, {university.province}
           </p>
         </div>
@@ -83,7 +85,7 @@ export default function UniversityDetailPage() {
               "border-b-2 px-3 py-2 text-sm font-medium",
               tab === t
                 ? "border-indigo-600 text-indigo-600"
-                : "border-transparent text-slate-500 hover:text-slate-700"
+                : "border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-300 dark:hover:text-white"
             )}
           >
             {t}
@@ -93,7 +95,7 @@ export default function UniversityDetailPage() {
 
       <div className="mt-6">
         {tab === "Overview" && (
-          <div className="flex flex-col gap-3 text-sm text-slate-700">
+          <div className="flex flex-col gap-3 text-sm text-slate-700 dark:text-slate-300">
             {university.ranking_national && (
               <p>National ranking: #{university.ranking_national}</p>
             )}
@@ -120,11 +122,11 @@ export default function UniversityDetailPage() {
               university.programs.map((program) => (
                 <Card key={program.id}>
                   <CardBody>
-                    <p className="font-medium text-slate-900">{program.name}</p>
+                    <p className="font-medium text-slate-900 dark:text-white">{program.name}</p>
                     <Badge tone="neutral" className="mt-1">
                       {program.degree_type}
                     </Badge>
-                    <p className="mt-2 text-sm text-slate-600">
+                    <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">
                       {program.duration_years} years
                       {program.tuition_domestic && ` · $${program.tuition_domestic}/yr domestic`}
                     </p>
@@ -132,7 +134,7 @@ export default function UniversityDetailPage() {
                 </Card>
               ))
             ) : (
-              <p className="text-sm text-slate-500">No programs listed yet.</p>
+              <p className="text-sm text-slate-500 dark:text-slate-300">No programs listed yet.</p>
             )}
           </div>
         )}
@@ -142,7 +144,9 @@ export default function UniversityDetailPage() {
             {user ? (
               <Card>
                 <CardBody>
-                  <h2 className="mb-4 text-lg font-semibold text-slate-900">Write a review</h2>
+                  <h2 className="mb-4 text-lg font-semibold text-slate-900 dark:text-white">
+                    Write a review
+                  </h2>
                   <ReviewForm
                     universityId={university.id}
                     universitySlug={university.slug}
@@ -151,7 +155,7 @@ export default function UniversityDetailPage() {
                 </CardBody>
               </Card>
             ) : (
-              <p className="text-sm text-slate-600">
+              <p className="text-sm text-slate-600 dark:text-slate-300">
                 <Link href="/login" className="font-medium text-indigo-600 hover:text-indigo-700">
                   Log in
                 </Link>{" "}
@@ -168,10 +172,12 @@ export default function UniversityDetailPage() {
                 {reviewsPage.results.map((review) => (
                   <ReviewCard key={review.id} review={review} />
                 ))}
-                <p className="text-xs text-slate-400">{reviewsPage.count} approved reviews</p>
+                <p className="text-xs text-slate-400 dark:text-slate-300">
+                  {reviewsPage.count} approved reviews
+                </p>
               </div>
             ) : (
-              <p className="text-sm text-slate-500">No approved reviews yet.</p>
+              <p className="text-sm text-slate-500 dark:text-slate-300">No approved reviews yet.</p>
             )}
           </div>
         )}
