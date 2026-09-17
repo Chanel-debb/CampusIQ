@@ -83,9 +83,12 @@ export default function MatcherResultsPage() {
             {data.recommended_programs.map((program) => (
               <Card key={program.id}>
                 <CardBody>
-                  <p className="font-medium text-slate-900">{program.name}</p>
-                  <p className="mt-1 text-sm text-slate-500">
-                    {program.degree_type} · {program.duration_years} years
+                  <p className="font-medium text-slate-900 dark:text-white">{program.name}</p>
+                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-300">
+                    {program.university_name}
+                  </p>
+                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                    {program.degree_type}
                   </p>
                 </CardBody>
               </Card>

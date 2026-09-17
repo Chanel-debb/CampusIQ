@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
-from careers.serializers import CareerListSerializer
-from universities.serializers import ProgramSerializer
+from careers.serializers import CareerListSerializer, LinkedProgramSerializer
 
 from .models import MatchResult
 
@@ -45,4 +44,4 @@ class MatchResultSerializer(serializers.ModelSerializer):
 
     def get_recommended_programs(self, obj):
         programs = self.context.get("programs", [])
-        return ProgramSerializer(programs, many=True).data
+        return LinkedProgramSerializer(programs, many=True).data

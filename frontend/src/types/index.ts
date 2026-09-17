@@ -121,7 +121,7 @@ export interface MatchResult {
   session_key: string;
   quiz_answers: Record<string, string>;
   recommended_careers: Career[];
-  recommended_programs: Program[];
+  recommended_programs: LinkedProgram[];
   created_at: string;
 }
 
