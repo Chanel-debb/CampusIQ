@@ -1,8 +1,12 @@
-from rest_framework.routers import DefaultRouter
+from django.urls import path
 
-from .views import ConversationViewSet
+from .views import ChatSessionCreateView, ChatSessionDetailView
 
-router = DefaultRouter()
-router.register("conversations", ConversationViewSet, basename="conversation")
-
-urlpatterns = router.urls
+urlpatterns = [
+    path("sessions/", ChatSessionCreateView.as_view(), name="chat-session-create"),
+    path(
+        "sessions/<str:session_key>/",
+        ChatSessionDetailView.as_view(),
+        name="chat-session-detail",
+    ),
+]

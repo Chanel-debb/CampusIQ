@@ -5,31 +5,39 @@ from django.db import models
 from pgvector.django import HnswIndex, VectorField
 
 
-class Conversation(models.Model):
+def generate_session_key():
+    return uuid.uuid4().hex
+
+
+class ChatSession(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="conversations"
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="chat_sessions",
     )
-    title = models.CharField(max_length=255, blank=True)
+    session_key = models.CharField(
+        max_length=64, unique=True, default=generate_session_key, editable=False
+    )
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["-updated_at"]
+        ordering = ["-created_at"]
 
     def __str__(self):
-        return self.title or str(self.id)
+        return f"ChatSession({self.user or self.session_key})"
 
 
 class Message(models.Model):
     class Role(models.TextChoices):
         USER = "user", "User"
         ASSISTANT = "assistant", "Assistant"
-        SYSTEM = "system", "System"
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    conversation = models.ForeignKey(
-        Conversation, on_delete=models.CASCADE, related_name="messages"
+    chat_session = models.ForeignKey(
+        ChatSession, on_delete=models.CASCADE, related_name="messages"
     )
     role = models.CharField(max_length=16, choices=Role.choices)
     content = models.TextField()
@@ -43,7 +51,11 @@ class Message(models.Model):
 
 
 class DocumentChunk(models.Model):
-    """A chunk of source material embedded for retrieval-augmented generation."""
+    """A chunk of source material embedded for retrieval-augmented generation.
+
+    Unused until Phase 5 (pgvector-based RAG) — Phase 4's chat context is built
+    from plain keyword lookups against Career/University, see chat/rag.py.
+    """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     source = models.CharField(max_length=255)

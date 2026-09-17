@@ -47,7 +47,7 @@ services:
       DJANGO_CSRF_TRUSTED_ORIGINS: http://localhost:3000
       CORS_ALLOWED_ORIGINS: http://localhost:3000
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
-      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-sonnet-5}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-sonnet-4-6}
     depends_on:
       db:
         condition: service_healthy
@@ -67,7 +67,7 @@ services:
       REDIS_URL: redis://redis:6379/0
       DJANGO_DEBUG: "True"
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
-      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-sonnet-5}
+      ANTHROPIC_MODEL: ${ANTHROPIC_MODEL:-claude-sonnet-4-6}
     depends_on:
       db:
         condition: service_healthy

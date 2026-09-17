@@ -1,14 +1,21 @@
-from rest_framework import viewsets
+from rest_framework import generics, permissions
 
-from .models import Conversation
-from .serializers import ConversationSerializer
+from .models import ChatSession
+from .serializers import ChatSessionDetailSerializer, ChatSessionSerializer
 
 
-class ConversationViewSet(viewsets.ModelViewSet):
-    serializer_class = ConversationSerializer
-
-    def get_queryset(self):
-        return Conversation.objects.filter(user=self.request.user)
+class ChatSessionCreateView(generics.CreateAPIView):
+    queryset = ChatSession.objects.all()
+    serializer_class = ChatSessionSerializer
+    permission_classes = [permissions.AllowAny]
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        user = self.request.user if self.request.user.is_authenticated else None
+        serializer.save(user=user)
+
+
+class ChatSessionDetailView(generics.RetrieveAPIView):
+    queryset = ChatSession.objects.prefetch_related("messages")
+    serializer_class = ChatSessionDetailSerializer
+    permission_classes = [permissions.AllowAny]
+    lookup_field = "session_key"

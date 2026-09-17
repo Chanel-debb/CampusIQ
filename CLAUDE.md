@@ -33,12 +33,10 @@ Phase 0 complete:
 - Monorepo scaffold (`backend/`, `frontend/`, root `docker-compose.yml`), managed with uv (backend) and npm (frontend).
 - Custom `accounts.User` model (UUID PK, email login, full_name, role, province, grad_year) — `AUTH_USER_MODEL = "accounts.User"`.
 - JWT auth via `djangorestframework-simplejwt`: `POST /api/auth/register/`, `/api/auth/token/`, `/api/auth/token/refresh/`, `/api/auth/token/verify/`, `/api/auth/me/`.
-- `chat` app: `Conversation`/`Message` models plus a `DocumentChunk` model (pgvector `embedding vector(1536)` + HNSW index) for RAG; a Channels `ChatConsumer` streams Claude responses over WebSocket.
+- `chat` app: `ChatSession`/`Message` models plus a `DocumentChunk` model (pgvector `embedding vector(1536)` + HNSW index, unused until Phase 5) for RAG; a Channels `ChatConsumer` streams Claude responses over WebSocket.
 - `core` app: health check endpoint (`/api/health/`), owns the pgvector extension migration.
 - Dockerfiles (backend + frontend) and root `docker-compose.yml` (Postgres+pgvector, Redis, backend/celery worker/celery beat, frontend).
 - GitHub Actions CI (`.github/workflows/ci.yml`): backend job (ruff, Django checks, migration-drift check, migrate against a `pgvector/pgvector:pg16` service, tests) and frontend job (lint, build).
-
-Note: the chat data model is `Conversation` + `Message` (not the single `ChatSession` with a `messages` JSONB blob described under DB Models below) — relational messages made more sense alongside the WebSocket consumer. Worth reconciling that section if `ChatSession` is meant to be the eventual shape.
 
 Phase 1 complete:
 - `careers` app: `CareerCategory` (name, slug) and `Career` (title, slug, description, salary_min/max, `job_outlook` enum, required_education, skills JSONB, `embedding vector(1536)` + HNSW index, FK to `CareerCategory`). Slugs auto-populate from name/title on save.
@@ -67,8 +65,19 @@ Note: the API response's `recommended_careers`/`recommended_programs` are *not* 
 
 Engine tag/skill vocabulary (e.g. "analytical", "hands-on", "service") is designed to plausibly overlap with `Career.skills` but no `Career` rows are seeded yet, so matching hasn't been exercised against real data — worth a smoke test once the catalog has seed data.
 
-## Phase 4 Next
-Seed representative Career/University/Program data so the matcher and catalog endpoints have
-something real to return. Then decide the next MVP feature to build out (AI Chat Assistant
-with pgvector-based RAG is Phase 5 per the original roadmap).
+Phase 4 (AI Chat Assistant) complete — this also resolves the `ChatSession` vs `Conversation` naming gap noted in Phase 0: the model is now named `ChatSession` and matches the original DB Models blueprint (relational `Message` FK, not a JSONB blob — same reasoning as before, just under the right name).
+- `chat.ChatSession` (UUID PK, nullable FK `user`, unique `session_key` — server-generated via `generate_session_key()`, anonymous-friendly, `created_at`) and `chat.Message` (FK `chat_session`, `role` enum **user/assistant only** — no more `system`, since RAG context is injected per-turn as the Claude `system` prompt rather than stored as a message row — `content`, `created_at`).
+- `chat/rag.py`: `build_context(message)` — basic keyword-based retrieval, no pgvector yet (Phase 5). Extracts keywords from the user's message (with a stopword list that deliberately excludes domain-generic terms like "university"/"college"/"program"/"degree" — since most `University.name` values literally contain "University", leaving that word in would make every university match instead of a relevant one), then does `icontains` lookups against `Career.title`/`description` and `University.name`/`city`, formats up to 3+3 results into a context block.
+- `chat/consumers.py` `ChatConsumer` (`ws/chat/<session_key>/`): on connect, gets-or-creates the `ChatSession` by `session_key` (linking `user` if authenticated, else anonymous — same pattern as `matcher`). On each message: saves it, builds RAG context from it, streams the Claude response via `stream_reply` (existing `chat/services/claude.py`, unchanged) with the context folded into the system prompt, forwards each token as a `{"type": "delta", ...}` WS frame, then saves the completed assistant message and sends `{"type": "done"}`.
+- `ANTHROPIC_MODEL` default changed to `claude-sonnet-4-6` per explicit instruction (was `claude-sonnet-5`) — flagging since that string doesn't match any Claude model id I'm otherwise aware of; worth double-checking it's not a typo before relying on it in production.
+- `POST /api/chat/sessions/` (create, returns `session_key`; works authenticated or anonymous) and `GET /api/chat/sessions/<session_key>/` (full message history) — both public (`AllowAny`), same session-key-as-capability pattern as `matcher`.
+- Registered in admin: `ChatSessionAdmin` (with a `Message` inline), `MessageAdmin`, `DocumentChunkAdmin`.
+
+Known limitation carried over from `matcher`: WebSocket auth still goes through Channels' `AuthMiddlewareStack`, which is Django-session-cookie-based, not JWT — an authenticated API client (JWT) connecting over WS won't be recognized as that user unless they also have a Django session cookie. Not addressed here; flagged for whenever WS+JWT auth actually matters.
+
+## Phase 5 Next
+Replace chat/rag.py's keyword search with real pgvector-based semantic retrieval (embed Career/
+University/DocumentChunk content, embed the user's message, similarity search). Also seed
+representative Career/University/Program data — nothing's been exercised against real rows yet,
+across matcher, reviews, or chat context.
 
