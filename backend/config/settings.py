@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "chat",
     "careers",
     "universities",
+    "reviews",
 ]
 
 AUTH_USER_MODEL = "accounts.User"

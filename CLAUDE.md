@@ -49,9 +49,15 @@ Phase 1 complete:
 
 `Province` choices are centralized in `core/choices.py` and imported by both `accounts.User.province` and `universities.University.province` — no more duplicated enum.
 
-## Phase 2 Next
-Build Review (user/university/program FK, ratings 1-5, body, moderation status) and MatchResult
-(user FK, quiz_answers JSONB, recommended careers + programs) models. Wire up the Program Matcher
-quiz flow and Student Reviews endpoints.
+Phase 2 (Reviews) complete:
+- `reviews` app: `Review` (UUID PK, FK `user`, FK `university`, nullable FK `program`, `overall_rating`/`teaching_rating`/`career_support_rating` IntegerField 1-5 via validators, `body`, `is_verified`, `status` enum pending/approved/rejected, `created_at`). One review per user per university enforced via `unique_together = [("user", "university")]`.
+- Signal chain (`reviews/signals.py`, wired via `ReviewsConfig.ready()`): a `pre_save` receiver stashes the prior status, then `post_save` recalculates `University.avg_rating`/`total_reviews` (from `overall_rating` of approved reviews only) whenever a review enters *or* leaves approved status — not just on entry, since leaving approved (e.g. a reject after approve) must also pull it out of the average. A `post_delete` receiver does the same recalculation if an approved review is deleted.
+- `POST /api/reviews/` (auth required) — validates the program belongs to the selected university and that the user hasn't already reviewed that university, with a clear per-field error message. `GET /api/universities/<slug>/reviews/` — paginated (`ReviewPagination`, page_size 10), approved-only, public.
+- `ReviewAdmin` has bulk "Approve selected reviews" / "Reject selected reviews" actions that loop and call `.save()` per instance (not `queryset.update()`) specifically so the recalculation signal fires for each one.
 
+Note: couldn't run a live `migrate` against a real Postgres+pgvector instance in this environment (same Docker-daemon-unavailable limitation as Phase 0/1) — verified instead via `manage.py check`, `makemigrations --check` (no drift), a direct inspection of the generated migration's dependency graph, and confirming the signal receivers are actually connected for the `Review` model at runtime.
+
+## Phase 3 Next
+Build MatchResult (user FK, quiz_answers JSONB, recommended careers + programs) and wire up the
+Program Matcher quiz flow.
 
