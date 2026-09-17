@@ -107,7 +107,14 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [REDIS_URL],
+            "hosts": [
+                {
+                    "address": REDIS_URL,
+                    "socket_timeout": 10,
+                    "socket_connect_timeout": 10,
+                    "socket_keepalive": True,
+                }
+            ],
         },
     },
 }
