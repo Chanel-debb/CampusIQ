@@ -84,12 +84,17 @@ export default function ChatPage() {
         setIsAssistantTyping(true);
         setStreamingContent(streamingContentRef.current);
       } else if (data.type === "done") {
+        // Snapshot before clearing: setMessages's updater function runs later, during
+        // React's batched re-render, not synchronously here -- by then the ref reset
+        // below would already have happened, so reading the ref again inside the
+        // updater silently commits an empty string instead of the streamed text.
+        const completedContent = streamingContentRef.current;
         setMessages((prev) => [
           ...prev,
           {
             id: makeId(),
             role: "assistant",
-            content: streamingContentRef.current,
+            content: completedContent,
             created_at: new Date().toISOString(),
           },
         ]);
