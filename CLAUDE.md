@@ -75,9 +75,21 @@ Phase 4 (AI Chat Assistant) complete — this also resolves the `ChatSession` vs
 
 Known limitation carried over from `matcher`: WebSocket auth still goes through Channels' `AuthMiddlewareStack`, which is Django-session-cookie-based, not JWT — an authenticated API client (JWT) connecting over WS won't be recognized as that user unless they also have a Django session cookie. Not addressed here; flagged for whenever WS+JWT auth actually matters.
 
-## Phase 5 Next
+Phase 5 (Next.js frontend) complete:
+- Installed axios, @tanstack/react-query, zustand, zod, react-hook-form, @hookform/resolvers.
+- `src/lib/api.ts`: axios instance against `NEXT_PUBLIC_API_URL`, request interceptor attaches the JWT access token from `localStorage`, response interceptor logs out on 401. Note: `api.ts` and `src/store/authStore.ts` import each other (interceptor calls `useAuthStore.getState().logout()`); safe because both are only accessed lazily inside callbacks, never at module-eval time, but worth knowing if this ever gets refactored.
+- `src/store/authStore.ts` (Zustand): `user`, `accessToken`/`refreshToken`, `login`/`register`/`logout`/`hydrate`. `register()` calls `POST /api/auth/register/` (which only returns the created user, no tokens) then immediately chains into `login()` to get tokens — matches how the backend's `RegisterView` is actually shaped.
+- `src/types/index.ts` mirrors the backend serializers field-for-field, including the DRF detail: `DecimalField`s (`avg_rating`, `duration_years`, tuition, `avg_gpa_required`) serialize as **strings**, not numbers — typed accordingly throughout.
+- All pages/components from the spec are built: landing page, `(auth)/login` + `(auth)/register` (react-hook-form + zod), careers list/detail, universities list/detail (Overview/Programs/Reviews tabs, paginated approved reviews, auth-gated `ReviewForm`), matcher quiz + results, chat UI with real WebSocket streaming and suggested-prompt chips. Shared `components/ui` primitives (Button, Card, Badge, Input, Spinner), layout (Navbar, Footer), and feature components per the spec.
+- Backend change made to support this: `careers.CareerDetailSerializer` didn't expose linked programs at all (the frontend's career detail page needs a "linked programs" section, and there was no way to get that data otherwise). Added a `LinkedProgramSerializer` (id, name, slug, degree_type, university_name, university_slug — needs the parent university's name/slug for context, unlike the university-nested `ProgramSerializer`) and wired it onto `Career.programs` (the reverse of `Program.careers` M2M).
+- Session-key-as-capability pattern (matcher, chat) is used the same way on the frontend: `localStorage` holds `matcher_session_key` / `chat_session_key`, and results/chat pages rehydrate from the backend using that key rather than passing state through the router.
+- `zod`'s `.coerce`/`.transform()` doesn't type-check cleanly against react-hook-form's `useForm<T>` generic (output type vs. input type mismatch) — hit this twice (register form's `grad_year`, review form's ratings) and resolved both by keeping the zod schema as plain strings and converting to `Number(...)` at submit time instead, rather than fighting zod v4's resolver generics.
+- Verified: `npm run build` passes clean (typecheck + lint + static generation across all 12 routes), `npm run lint` is clean, and a dev-server smoke test confirmed all pages return 200 with no console errors/warnings — but this is all against a backend that isn't running (same Docker-daemon-unavailable situation as every backend phase), so no page has actually round-tripped real data yet.
+
+## Phase 6 Next
 Replace chat/rag.py's keyword search with real pgvector-based semantic retrieval (embed Career/
 University/DocumentChunk content, embed the user's message, similarity search). Also seed
-representative Career/University/Program data — nothing's been exercised against real rows yet,
-across matcher, reviews, or chat context.
+representative Career/University/Program data and do a real end-to-end run (docker compose up)
+once Docker is available — nothing in matcher, reviews, chat, or the new frontend has been
+exercised against a live backend/database yet.
 

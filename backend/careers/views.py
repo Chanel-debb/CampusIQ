@@ -6,7 +6,9 @@ from .serializers import CareerDetailSerializer, CareerListSerializer
 
 
 class CareerViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Career.objects.select_related("category").all()
+    queryset = Career.objects.select_related("category").prefetch_related(
+        "programs__university"
+    )
     permission_classes = [AllowAny]
     lookup_field = "slug"
 
